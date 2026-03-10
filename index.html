@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz de Programación y Tecnología</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            text-align: center;
+            background: #fff0f5;
+            color: #4a4a4a;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #d46b9e;
+            font-size: 2.2em;
+            text-shadow: 2px 2px 4px rgba(255, 182, 193, 0.5);
+        }
+        #contador {
+            font-size: 1.2em;
+            color: #b34180;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        #quiz {
+            background: #ffe4ec;
+            border-radius: 20px;
+            padding: 25px;
+            max-width: 600px;
+            margin: 20px auto;
+            box-shadow: 0 8px 15px rgba(255, 105, 180, 0.2);
+        }
+        #quiz h2 {
+            color: #b34180;
+            font-size: 1.5em;
+        }
+        #quiz button {
+            display: block;
+            margin: 12px auto;
+            padding: 12px 25px;
+            background: #ffb6c1;
+            color: #4a2b3b;
+            border: 2px solid #ff99aa;
+            border-radius: 30px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 80%;
+            max-width: 400px;
+        }
+        #quiz button:hover:not(:disabled) {
+            background: #ff99aa;
+            border-color: #ff7a9e;
+            transform: scale(1.02);
+            box-shadow: 0 5px 10px rgba(255, 105, 180, 0.4);
+        }
+        #quiz button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background: #f0b0c0;
+        }
+        #resultado {
+            font-weight: bold;
+            margin-top: 15px;
+            font-size: 1.3em;
+            color: #c94f7c;
+        }
+        .botones-control {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .botones-control button {
+            background: #f7c5d1;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 40px;
+            font-size: 1.1em;
+            color: #4a2b3b;
+            font-weight: bold;
+            cursor: pointer;
+            border: 2px solid #ffb0c3;
+            transition: 0.3s;
+        }
+        .botones-control button:hover {
+            background: #f5a9b8;
+            border-color: #ff8aa1;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌸 Quiz de Programación y Tecnología 🌸</h1>
+    <div id="contador"></div>
+    <div id="quiz"></div>
+    <p id="resultado"></p>
+    <div class="botones-control">
+        <button onclick="siguientePregunta()">Siguiente ➡️</button>
+        <button onclick="reiniciarJuego()">🔄 Reiniciar</button>
+    </div>
+
+    <script>
+        let preguntas = [
+            // Preguntas originales (5)
+            {pregunta: "¿Qué significa HTML?", opciones: ["HyperText Markup Language", "HighText Machine Language", "Home Tool Markup Language"], respuesta: 0},
+            {pregunta: "¿Qué lenguaje se usa para estilos en páginas web?", opciones: ["Python", "CSS", "SQL"], respuesta: 1},
+            {pregunta: "¿Qué significa CPU?", opciones: ["Central Processing Unit", "Computer Personal Unit", "Control Program Utility"], respuesta: 0},
+            {pregunta: "¿Qué significa CSS?", opciones: ["Cascading Style Sheets", "Creative Style System", "Computer Style Syntax"], respuesta: 0},
+            {pregunta: "¿Qué significa RAM?", opciones: ["Random Access Memory", "Read Access Module", "Rapid Action Machine"], respuesta: 0},
+            // Nuevas preguntas (55)
+            {pregunta: "¿Qué significa HTTP?", opciones: ["HyperText Transfer Protocol", "Hyper Transfer Text Protocol", "High Tech Transfer Protocol"], respuesta: 0},
+            {pregunta: "¿Qué lenguaje se utiliza comúnmente para la programación del lado del servidor?", opciones: ["JavaScript", "PHP", "HTML"], respuesta: 1},
+            {pregunta: "¿Cuál es el sistema operativo de código abierto más extendido?", opciones: ["Windows", "Linux", "macOS"], respuesta: 1},
+            {pregunta: "¿Qué significa SQL?", opciones: ["Structured Query Language", "Simple Query Language", "Standard Query Language"], respuesta: 0},
+            {pregunta: "¿Qué significa AI?", opciones: ["Artificial Intelligence", "Automated Interface", "Algorithmic Intelligence"], respuesta: 0},
+            {pregunta: "¿Qué componente almacena permanentemente los datos?", opciones: ["Memoria RAM", "Disco duro", "Procesador"], respuesta: 1},
+            {pregunta: "¿Qué significa BIOS?", opciones: ["Basic Input Output System", "Binary Input Output System", "Basic Integrated Operating System"], respuesta: 0},
+            {pregunta: "¿Qué lenguaje es principal para apps Android?", opciones: ["Swift", "Java", "C#"], respuesta: 1},
+            {pregunta: "¿Qué significa URL?", opciones: ["Uniform Resource Locator", "Universal Resource Locator", "Uniform Retrieval Locator"], respuesta: 0},
+            {pregunta: "¿Qué es un firewall?", opciones: ["Un tipo de virus", "Sistema de seguridad de red", "Programa de navegación"], respuesta: 1},
+            {pregunta: "¿Qué significa PDF?", opciones: ["Portable Document Format", "Personal Document File", "Printable Document Format"], respuesta: 0},
+            {pregunta: "¿Qué significa IDE?", opciones: ["Integrated Development Environment", "Intelligent Design Environment", "Internal Data Exchange"], respuesta: 0},
+            {pregunta: "¿Qué es un algoritmo?", opciones: ["Un lenguaje de programación", "Conjunto de pasos para resolver un problema", "Un tipo de dato"], respuesta: 1},
+            {pregunta: "¿Qué significa VPN?", opciones: ["Virtual Private Network", "Very Personal Network", "Virtual Public Network"], respuesta: 0},
+            {pregunta: "¿Qué es el phishing?", opciones: ["Cifrado", "Suplantación de identidad", "Protocolo de red"], respuesta: 1},
+            {pregunta: "¿Qué significa IoT?", opciones: ["Internet of Things", "Input Output Terminal", "Internal Operating Technology"], respuesta: 0},
+            {pregunta: "¿Qué es la nube (cloud computing)?", opciones: ["Almacenamiento físico", "Servicios a través de internet", "Un sistema operativo"], respuesta: 1},
+            {pregunta: "¿Qué significa GUI?", opciones: ["Graphical User Interface", "General User Interface", "Graphic Utility Interface"], respuesta: 0},
+            {pregunta: "¿Qué es un compilador?", opciones: ["Traduce código fuente a código máquina", "Ejecuta código línea por línea", "Administra memoria"], respuesta: 0},
+            {pregunta: "¿Qué significa API?", opciones: ["Application Programming Interface", "Advanced Programming Interface", "Application Process Integration"], respuesta: 0},
+            {pregunta: "¿Qué es un sistema operativo?", opciones: ["Un programa de aplicación", "Software que administra hardware y software", "Un tipo de procesador"], respuesta: 1},
+            {pregunta: "¿Qué significa USB?", opciones: ["Universal Serial Bus", "Universal System Bus", "Unified Serial Bus"], respuesta: 0},
+            {pregunta: "¿Qué es la memoria caché?", opciones: ["Memoria de alta velocidad cercana a la CPU", "Almacenamiento secundario", "Tipo de RAM"], respuesta: 0},
+            {pregunta: "¿Qué significa LED?", opciones: ["Light Emitting Diode", "Light Energy Diode", "Liquid Emitting Display"], respuesta: 0},
+            {pregunta: "¿Qué es un byte?", opciones: ["8 bits", "16 bits", "1 bit"], respuesta: 0},
+            {pregunta: "¿Qué significa WWW?", opciones: ["World Wide Web", "Web Wide World", "World Web Wide"], respuesta: 0},
+            {pregunta: "¿Qué lenguaje es ampliamente utilizado en el desarrollo de videojuegos?", opciones: ["HTML", "C++", "SQL"], respuesta: 1},
+            {pregunta: "¿Qué significa TCP/IP?", opciones: ["Transmission Control Protocol/Internet Protocol", "Transfer Control Protocol/Internet Protocol", "Technical Control Protocol/Interface Protocol"], respuesta: 0},
+            {pregunta: "¿Qué es un DNS?", opciones: ["Domain Name System", "Digital Network Service", "Data Name Server"], respuesta: 0},
+            {pregunta: "¿Qué significa FTP?", opciones: ["File Transfer Protocol", "Fast Transfer Protocol", "File Transaction Protocol"], respuesta: 0},
+            {pregunta: "¿Qué es un ataque DDoS?", opciones: ["Distributed Denial of Service", "Data Denial of System", "Direct Download Operating System"], respuesta: 0},
+            {pregunta: "¿Qué significa JSON?", opciones: ["JavaScript Object Notation", "Java Standard Object Notation", "JavaScript Oriented Notation"], respuesta: 0},
+            {pregunta: "¿Qué es un microprocesador?", opciones: ["Unidad central de procesamiento en un chip", "Un tipo de memoria", "Un periférico"], respuesta: 0},
+            {pregunta: "¿Qué es GitHub?", opciones: ["Plataforma de control de versiones", "Red social", "Servicio de almacenamiento en la nube"], respuesta: 0},
+            {pregunta: "¿Qué significa XML?", opciones: ["eXtensible Markup Language", "Extra Markup Language", "Xtreme Markup Language"], respuesta: 0},
+            {pregunta: "¿Qué es un servidor?", opciones: ["Computadora que provee servicios a otras", "Un programa antivirus", "Un tipo de router"], respuesta: 0},
+            {pregunta: "¿Qué significa LAN?", opciones: ["Local Area Network", "Large Area Network", "Logical Area Network"], respuesta: 0},
+            {pregunta: "¿Qué significa WAN?", opciones: ["Wide Area Network", "Wireless Area Network", "Web Area Network"], respuesta: 0},
+            {pregunta: "¿Qué es un bit?", opciones: ["Dígito binario (0 o 1)", "Unidad de almacenamiento", "Tipo de byte"], respuesta: 0},
+            {pregunta: "¿Qué significa SSD?", opciones: ["Solid State Drive", "System Storage Device", "Super Speed Disk"], respuesta: 0},
+            {pregunta: "¿Qué significa HDD?", opciones: ["Hard Disk Drive", "High Density Disk", "Hybrid Data Drive"], respuesta: 0},
+            {pregunta: "¿Qué es Python?", opciones: ["Un editor de texto", "Lenguaje de programación", "Un navegador web"], respuesta: 1},
+            {pregunta: "¿Qué significa OOP?", opciones: ["Object-Oriented Programming", "Operational Oriented Protocol", "Open Operation Protocol"], respuesta: 0},
+            {pregunta: "¿Qué es un bucle en programación?", opciones: ["Estructura que repite código", "Una condición", "Un tipo de variable"], respuesta: 0},
+            {pregunta: "¿Qué significa HTML5?", opciones: ["Versión de HTML", "Un lenguaje de programación", "Un protocolo de red"], respuesta: 0},
+            {pregunta: "¿Qué es JavaScript?", opciones: ["Lenguaje de programación web", "Un sistema operativo", "Un tipo de hardware"], respuesta: 0},
+            {pregunta: "¿Qué es una variable en programación?", opciones: ["Espacio de almacenamiento con nombre", "Un valor constante", "Una función"], respuesta: 0},
+            {pregunta: "¿Qué significa CRUD?", opciones: ["Create, Read, Update, Delete", "Copy, Run, Update, Data", "Code, Read, Update, Data"], respuesta: 0},
+            {pregunta: "¿Qué es un framework?", opciones: ["Conjunto de herramientas y librerías para desarrollar", "Un lenguaje de programación", "Un tipo de base de datos"], respuesta: 0},
+            {pregunta: "¿Qué significa AJAX?", opciones: ["Asynchronous JavaScript and XML", "Advanced Java XML", "Asynchronous JSON and XML"], respuesta: 0},
+            {pregunta: "¿Qué es MySQL?", opciones: ["Sistema de gestión de bases de datos", "Un lenguaje de programación", "Un servidor web"], respuesta: 0},
+            {pregunta: "¿Qué significa NoSQL?", opciones: ["Base de datos no relacional", "Lenguaje sin SQL", "Sin consultas"], respuesta: 0},
+            {pregunta: "¿Qué es un algoritmo de búsqueda binaria?", opciones: ["Búsqueda en un arreglo ordenado dividiendo en mitades", "Búsqueda secuencial", "Ordenamiento de datos"], respuesta: 0},
+            {pregunta: "¿Qué es un puntero en programación?", opciones: ["Variable que almacena dirección de memoria", "Un tipo de dato entero", "Una función especial"], respuesta: 0},
+            {pregunta: "¿Qué significa IP?", opciones: ["Internet Protocol", "Internal Protocol", "Interface Protocol"], respuesta: 0}
+        ];
+
+        let indice = 0;
+        let puntaje = 0;
+        let totalPreguntas = preguntas.length;
+
+        function mostrarPregunta() {
+            let quizDiv = document.getElementById("quiz");
+            let contadorDiv = document.getElementById("contador");
+            quizDiv.innerHTML = "";
+            let p = preguntas[indice];
+            let preguntaElem = document.createElement("h2");
+            preguntaElem.textContent = p.pregunta;
+            quizDiv.appendChild(preguntaElem);
+
+            p.opciones.forEach((opcion, i) => {
+                let boton = document.createElement("button");
+                boton.textContent = opcion;
+                boton.onclick = () => verificarRespuesta(i);
+                quizDiv.appendChild(boton);
+            });
+
+            // Actualizar contador
+            contadorDiv.textContent = `Pregunta ${indice + 1} de ${totalPreguntas}`;
+        }
+
+        function verificarRespuesta(i) {
+            // Bloquear todos los botones de opciones
+            let botones = document.querySelectorAll("#quiz button");
+            botones.forEach(boton => {
+                boton.disabled = true;
+            });
+
+            if (i === preguntas[indice].respuesta) {
+                puntaje++;
+                document.getElementById("resultado").textContent = "✅ Correcto!";
+            } else {
+                document.getElementById("resultado").textContent = "❌ Incorrecto!";
+            }
+        }
+
+        function siguientePregunta() {
+            if (indice < totalPreguntas - 1) {
+                indice++;
+                mostrarPregunta();
+                document.getElementById("resultado").textContent = "";
+            } else if (indice === totalPreguntas - 1) {
+                // Si estamos en la última pregunta, mostrar fin del juego
+                document.getElementById("quiz").innerHTML = `<h2>🏁 Juego terminado. Puntaje: ${puntaje}/${totalPreguntas}</h2>`;
+                document.getElementById("contador").textContent = `¡Completaste todas las preguntas!`;
+                document.getElementById("resultado").textContent = "";
+            }
+        }
+
+        function reiniciarJuego() {
+            indice = 0;
+            puntaje = 0;
+            mostrarPregunta();
+            document.getElementById("resultado").textContent = "";
+        }
+
+        // Iniciar el juego
+        mostrarPregunta();
+    </script>
+</body>
+</html>
